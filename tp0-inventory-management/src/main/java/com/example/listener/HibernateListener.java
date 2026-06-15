@@ -1,0 +1,18 @@
+package com.example.listener;
+
+import com.example.util.HibernateUtil;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+public class HibernateListener implements ServletContextListener {
+
+    @Override
+    public void contextInitialized(ServletContextEvent sce) {
+        HibernateUtil.getSessionFactory();
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent sce) {
+        HibernateUtil.shutdown();
+    }
+}
