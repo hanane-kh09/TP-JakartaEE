@@ -1,0 +1,10 @@
+ma\fst\studentapi\entity\Student.class
+ma\fst\studentapi\controller\StudentController.class
+ma\fst\studentapi\dto\StudentRequestDTO.class
+ma\fst\studentapi\repository\StudentRepository.class
+ma\fst\studentapi\dto\StudentResponseDTO.class
+ma\fst\studentapi\service\StudentService.class
+ma\fst\studentapi\mapper\StudentMapper.class
+ma\fst\studentapi\exception\GlobalExceptionHandler.class
+ma\fst\studentapi\exception\ResourceNotFoundException.class
+ma\fst\studentapi\StudentApiApplication.class

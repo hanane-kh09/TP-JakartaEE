@@ -1,0 +1,10 @@
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\controller\StudentController.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\dto\StudentRequestDTO.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\dto\StudentResponseDTO.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\entity\Student.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\exception\GlobalExceptionHandler.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\exception\ResourceNotFoundException.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\mapper\StudentMapper.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\repository\StudentRepository.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\service\StudentService.java
+C:\Users\ytr\IdeaProjects\tp8-studentapi\src\main\java\ma\fst\studentapi\StudentApiApplication.java
