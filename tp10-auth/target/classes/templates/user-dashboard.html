@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Espace Utilisateur</title>
+    <style>
+        body { font-family: Arial; background-color: #f4f4f4; text-align: center; margin-top: 80px; }
+        .box { background: white; padding: 30px; border-radius: 8px; width: 350px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        a { color: red; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h2>Espace Utilisateur</h2>
+    <p>Accessible aux rôles <strong>USER</strong> et <strong>ADMIN</strong>.</p>
+    <br/>
+    <a th:href="@{/home}">← Retour à l'accueil</a>
+    <br/><br/>
+    <a th:href="@{/logout}">Déconnexion</a>
+</div>
+</body>
+</html>
