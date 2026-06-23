@@ -1,0 +1,7 @@
+target/
+logs/*.log
+logs/*.tar.gz
+*.class
+.idea/
+*.iml
+.mvn/
