@@ -1,0 +1,6 @@
+ma\ens\springdocker\service\EtudiantService.class
+ma\ens\springdocker\SpringdockerApplication.class
+ma\ens\springdocker\controller\EtudiantController.class
+ma\ens\springdocker\repository\EtudiantRepository.class
+ma\ens\springdocker\entity\Etudiant$EtudiantBuilder.class
+ma\ens\springdocker\entity\Etudiant.class
