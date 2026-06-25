@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::#materiel-view})}">
+<head>
+    <title>Détails du matériel - Parc Informatique</title>
+</head>
+<body>
+    <div id="materiel-view">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Fiche Matériel</h1>
+                <p class="text-secondary mb-0">Consultation des caractéristiques et historique d'affectation</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a th:href="@{/materiels/edit/{id}(id=${materiel.id})}" class="btn btn-light fw-semibold text-warning" style="border-radius: 8px;">
+                    <i class="fa-solid fa-pen me-2"></i>Modifier
+                </a>
+                <a href="/materiels" class="btn btn-light fw-semibold" style="border-radius: 8px;">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Retour
+                </a>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Details Card -->
+            <div class="col-12 col-lg-4">
+                <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 16px;">
+                    <h5 class="fw-bold mb-4">Informations Générales</h5>
+                    <div class="d-flex flex-column gap-3">
+                        <div>
+                            <div class="text-secondary" style="font-size: 0.8rem; font-weight: 500;">RÉFÉRENCE</div>
+                            <div class="fw-semibold fs-5 text-primary" th:text="${materiel.ref}">REF-PC</div>
+                        </div>
+                        <div>
+                            <div class="text-secondary" style="font-size: 0.8rem; font-weight: 500;">TYPE</div>
+                            <div class="fw-semibold" th:text="${materiel.type}">PC</div>
+                        </div>
+                        <div>
+                            <div class="text-secondary" style="font-size: 0.8rem; font-weight: 500;">MARQUE</div>
+                            <div class="fw-semibold" th:text="${materiel.marque}">Dell</div>
+                        </div>
+                        <div>
+                            <div class="text-secondary" style="font-size: 0.8rem; font-weight: 500;">ÉTAT</div>
+                            <div>
+                                <span class="badge badge-pill"
+                                      th:classappend="${materiel.etat.name() == 'OK' ? 'bg-success-subtle text-success' : (materiel.etat.name() == 'REFORME' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning')}"
+                                      th:text="${materiel.etat}">OK</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="text-secondary" style="font-size: 0.8rem; font-weight: 500;">DATE D'ACHAT</div>
+                            <div class="fw-semibold" th:text="${materiel.dateAchat != null ? materiel.dateAchat : 'Non spécifiée'}">2026-06-06</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Card -->
+            <div class="col-12 col-lg-8">
+                <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 16px;">
+                    <h5 class="fw-bold mb-4">Historique des affectations</h5>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr class="text-secondary" style="font-size: 0.85rem;">
+                                    <th>Employé</th>
+                                    <th>Service</th>
+                                    <th>Date Début</th>
+                                    <th>Date Fin</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="a : ${affectations}">
+                                    <td>
+                                        <a th:href="@{/employes/view/{id}(id=${a.employe.id})}" th:text="${a.employe.nom}" class="fw-semibold text-decoration-none text-dark">Jean</a>
+                                    </td>
+                                    <td th:text="${a.employe.service}">Informatique</td>
+                                    <td th:text="${a.dateDebut}">2026-01-01</td>
+                                    <td th:text="${a.dateFin != null ? a.dateFin : '-'}">-</td>
+                                    <td>
+                                        <span class="badge badge-pill"
+                                              th:classappend="${a.statut.name() == 'ACTIVE' ? 'bg-success-subtle text-success' : (a.statut.name() == 'RETOURNEE' ? 'bg-secondary-subtle text-secondary' : 'bg-warning-subtle text-warning')}"
+                                              th:text="${a.statut}">ACTIVE</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(affectations)}">
+                                    <td colspan="5" class="text-center text-secondary py-5">
+                                        <i class="fa-solid fa-clock-rotate-left fs-2 mb-2 text-muted"></i>
+                                        <div class="d-block">Ce matériel n'a pas encore fait l'objet d'une affectation.</div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

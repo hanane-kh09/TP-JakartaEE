@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::#employe-form-block})}">
+<head>
+    <title th:text="${isEdit} ? 'Modifier l\'employé' : 'Ajouter un employé'"></title>
+</head>
+<body>
+    <div id="employe-form-block">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" th:text="${isEdit} ? 'Modifier l\'employé' : 'Ajouter un employé'">Ajouter un employé</h1>
+                <p class="text-secondary mb-0" th:text="${isEdit} ? 'Mise à jour des informations personnelles de l\'employé' : 'Saisir les informations pour enregistrer un nouvel employé'"></p>
+            </div>
+            <a href="/employes" class="btn btn-light fw-semibold" style="border-radius: 8px;">
+                <i class="fa-solid fa-arrow-left me-2"></i>Retour à la liste
+            </a>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card max-width-md mx-auto" style="max-width: 800px;">
+            <form th:action="${isEdit} ? @{/employes/edit/{id}(id=${employe.id})} : @{/employes/new}"
+                  th:object="${employe}" method="POST" class="row g-4">
+                
+                <!-- Hidden ID for Edit -->
+                <input type="hidden" th:field="*{id}" th:if="${isEdit}"/>
+
+                <!-- Nom -->
+                <div class="col-12 col-md-6">
+                    <label for="nom" class="form-label fw-semibold">Nom complet <span class="text-danger">*</span></label>
+                    <input type="text" id="nom" th:field="*{nom}" class="form-control" placeholder="ex: Alice Martin"
+                           th:classappend="${#fields.hasErrors('nom')} ? 'is-invalid' : ''">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('nom')}" th:errors="*{nom}">
+                        Le nom est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Service -->
+                <div class="col-12 col-md-6">
+                    <label for="service" class="form-label fw-semibold">Service / Département <span class="text-danger">*</span></label>
+                    <input type="text" id="service" th:field="*{service}" class="form-control" placeholder="ex: Informatique, Comptabilité"
+                           th:classappend="${#fields.hasErrors('service')} ? 'is-invalid' : ''">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('service')}" th:errors="*{service}">
+                        Le service est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="col-12">
+                    <label for="email" class="form-label fw-semibold">Adresse Email <span class="text-danger">*</span></label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="ex: alice.martin@entreprise.com"
+                           th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                        L'adresse email doit être valide.
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 d-flex gap-3 mt-5">
+                    <button type="submit" class="btn btn-primary btn-primary-custom px-4" th:text="${isEdit} ? 'Mettre à jour' : 'Enregistrer'"></button>
+                    <a href="/employes" class="btn btn-light fw-semibold px-4" style="border-radius: 8px;">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

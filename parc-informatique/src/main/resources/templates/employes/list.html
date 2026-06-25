@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::#employes-list})}">
+<head>
+    <title>Liste des employés - Parc Informatique</title>
+</head>
+<body>
+    <div id="employes-list">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Annuaire des employés</h1>
+                <p class="text-secondary mb-0">Gestion et affectation des profils au sein de l'entreprise</p>
+            </div>
+            <a href="/employes/new" class="btn btn-primary btn-primary-custom">
+                <i class="fa-solid fa-plus me-2"></i>Ajouter un employé
+            </a>
+        </div>
+
+        <!-- Filters & Search Bar -->
+        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 16px;">
+            <form method="GET" action="/employes" class="row g-3">
+                <div class="col-12 col-md-6">
+                    <div class="search-bar w-100" style="max-width: 100%;">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" name="search" th:value="${search}" placeholder="Rechercher par nom ou service...">
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 d-flex gap-2 justify-content-md-end">
+                    <button type="submit" class="btn btn-light fw-semibold" style="border-radius: 8px; padding: 10px 20px;">Filtrer</button>
+                    <a href="/employes" class="btn btn-link text-secondary text-decoration-none d-flex align-items-center">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-custom">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nom complet</th>
+                            <th>Service / Département</th>
+                            <th>Adresse Email</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="e : ${employes}">
+                            <td class="fw-semibold" th:text="${e.nom}">Alice Martin</td>
+                            <td th:text="${e.service}">Informatique</td>
+                            <td th:text="${e.email}">alice@email.com</td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-2">
+                                    <a th:href="@{/employes/view/{id}(id=${e.id})}" class="btn btn-sm btn-light text-primary" title="Détails" style="border-radius: 6px;">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <a th:href="@{/employes/edit/{id}(id=${e.id})}" class="btn btn-sm btn-light text-warning" title="Modifier" style="border-radius: 6px;">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-light text-danger" title="Supprimer" style="border-radius: 6px;"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                            th:data-url="@{/employes/delete/{id}(id=${e.id})}"
+                                            onclick="prepareDelete(this)">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(employes)}">
+                            <td colspan="4" class="text-center text-secondary py-5">
+                                <i class="fa-solid fa-inbox fs-1 mb-3 d-block text-muted"></i>
+                                Aucun employé trouvé
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow" style="border-radius: 16px;">
+                    <div class="modal-header border-0 pt-4 px-4">
+                        <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel">
+                            <i class="fa-solid fa-circle-exclamation me-2"></i>Confirmer la suppression
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body px-4 py-3">
+                        <p class="mb-0 text-secondary">Êtes-vous sûr de vouloir supprimer cet employé de l'annuaire ? Cette action est irréversible et supprimera également l'historique des affectations de cet employé.</p>
+                    </div>
+                    <div class="modal-footer border-0 pb-4 px-4 gap-2">
+                        <button type="button" class="btn btn-light fw-semibold" data-bs-dismiss="modal" style="border-radius: 8px; padding: 10px 20px;">Annuler</button>
+                        <a href="#" id="confirmDeleteBtn" class="btn btn-danger fw-semibold" style="border-radius: 8px; padding: 10px 20px;">Supprimer définitivement</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Script for Delete Modal -->
+        <script>
+            function prepareDelete(button) {
+                const deleteUrl = button.getAttribute('data-url');
+                document.getElementById('confirmDeleteBtn').setAttribute('href', deleteUrl);
+            }
+        </script>
+    </div>
+</body>
+</html>

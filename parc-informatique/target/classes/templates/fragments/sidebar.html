@@ -1,0 +1,35 @@
+<div th:fragment="sidebar" id="sidebar-wrapper">
+    <div class="sidebar-brand">
+        <i class="fa-solid fa-laptop-code"></i>
+        <span>Parc Informatique</span>
+    </div>
+    <ul class="sidebar-menu">
+        <li th:classappend="${activeTab == 'dashboard'} ? 'active' : ''">
+            <a href="/dashboard">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Tableau de bord</span>
+            </a>
+        </li>
+        <li th:classappend="${activeTab == 'materiels'} ? 'active' : ''">
+            <a href="/materiels">
+                <i class="fa-solid fa-desktop"></i>
+                <span>Matériels</span>
+            </a>
+        </li>
+        <li th:classappend="${activeTab == 'employes'} ? 'active' : ''">
+            <a href="/employes">
+                <i class="fa-solid fa-users"></i>
+                <span>Employés</span>
+            </a>
+        </li>
+        <li th:classappend="${activeTab == 'affectations'} ? 'active' : ''">
+            <a href="/affectations">
+                <i class="fa-solid fa-handshake"></i>
+                <span>Affectations</span>
+            </a>
+        </li>
+    </ul>
+    <div class="sidebar-footer">
+        <i class="fa-solid fa-shield-halved me-1"></i> Securisé
+    </div>
+</div>

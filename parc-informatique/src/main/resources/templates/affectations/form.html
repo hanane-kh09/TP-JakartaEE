@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::#affectation-form-block})}">
+<head>
+    <title th:text="${isEdit} ? 'Modifier l\'affectation' : 'Nouvelle affectation'"></title>
+</head>
+<body>
+    <div id="affectation-form-block">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" th:text="${isEdit} ? 'Modifier l\'affectation' : 'Nouvelle affectation'">Nouvelle affectation</h1>
+                <p class="text-secondary mb-0" th:text="${isEdit} ? 'Mise à jour des informations de l\'affectation' : 'Saisir les informations pour affecter un équipement à un employé'"></p>
+            </div>
+            <a href="/affectations" class="btn btn-light fw-semibold" style="border-radius: 8px;">
+                <i class="fa-solid fa-arrow-left me-2"></i>Retour à la liste
+            </a>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card max-width-md mx-auto" style="max-width: 800px;">
+            <form th:action="${isEdit} ? @{/affectations/edit/{id}(id=${affectation.id})} : @{/affectations/new}"
+                  th:object="${affectation}" method="POST" class="row g-4">
+                
+                <!-- Hidden ID for Edit -->
+                <input type="hidden" th:field="*{id}" th:if="${isEdit}"/>
+
+                <!-- Matériel Dropdown -->
+                <div class="col-12 col-md-6">
+                    <label for="materielId" class="form-label fw-semibold">Matériel informatique <span class="text-danger">*</span></label>
+                    <select id="materielId" th:field="*{materielId}" class="form-select"
+                            th:classappend="${#fields.hasErrors('materielId')} ? 'is-invalid' : ''">
+                        <option value="" th:text="'-- Sélectionner le matériel --'"></option>
+                        <option th:each="m : ${materiels}" th:value="${m.id}"
+                                th:text="${m.ref} + ' (' + ${m.marque} + ' - ' + ${m.type} + ')'"
+                                th:classappend="${m.etat.name() == 'EN_PANNE' || m.etat.name() == 'REFORME' ? 'text-danger' : ''}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('materielId')}" th:errors="*{materielId}">
+                        Le matériel est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Employé Dropdown -->
+                <div class="col-12 col-md-6">
+                    <label for="employeId" class="form-label fw-semibold">Employé bénéficiaire <span class="text-danger">*</span></label>
+                    <select id="employeId" th:field="*{employeId}" class="form-select"
+                            th:classappend="${#fields.hasErrors('employeId')} ? 'is-invalid' : ''">
+                        <option value="" th:text="'-- Sélectionner l\'employé --'"></option>
+                        <option th:each="e : ${employes}" th:value="${e.id}"
+                                th:text="${e.nom} + ' (' + ${e.service} + ')'"></option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('employeId')}" th:errors="*{employeId}">
+                        L'employé est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Date Début -->
+                <div class="col-12 col-md-6">
+                    <label for="dateDebut" class="form-label fw-semibold">Date de début <span class="text-danger">*</span></label>
+                    <input type="date" id="dateDebut" th:field="*{dateDebut}" class="form-control"
+                           th:classappend="${#fields.hasErrors('dateDebut')} ? 'is-invalid' : ''">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('dateDebut')}" th:errors="*{dateDebut}">
+                        La date de début est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Date Fin (uniquement en Modification) -->
+                <div class="col-12 col-md-6" th:if="${isEdit}">
+                    <label for="dateFin" class="form-label fw-semibold">Date de fin</label>
+                    <input type="date" id="dateFin" th:field="*{dateFin}" class="form-control">
+                </div>
+
+                <!-- Statut (uniquement en Modification) -->
+                <div class="col-12 col-md-6" th:if="${isEdit}">
+                    <label for="statut" class="form-label fw-semibold">Statut de l'affectation <span class="text-danger">*</span></label>
+                    <select id="statut" th:field="*{statut}" class="form-select"
+                            th:classappend="${#fields.hasErrors('statut')} ? 'is-invalid' : ''">
+                        <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('statut')}" th:errors="*{statut}">
+                        Le statut est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 d-flex gap-3 mt-5">
+                    <button type="submit" class="btn btn-primary btn-primary-custom px-4" th:text="${isEdit} ? 'Mettre à jour' : 'Enregistrer'"></button>
+                    <a href="/affectations" class="btn btn-light fw-semibold px-4" style="border-radius: 8px;">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

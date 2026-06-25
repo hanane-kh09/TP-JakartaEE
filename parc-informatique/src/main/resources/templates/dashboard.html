@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::#dashboard-content})}">
+<head>
+    <title>Tableau de bord - Parc Informatique</title>
+</head>
+<body>
+    <div id="dashboard-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Tableau de bord</h1>
+                <p class="text-secondary mb-0">Vue d'ensemble de l'inventaire et des affectations du parc informatique</p>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="row g-4 mb-5">
+            <!-- Total Matériels -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card-stat d-flex align-items-center gap-3">
+                    <div class="stat-icon stat-icon-blue">
+                        <i class="fa-solid fa-desktop"></i>
+                    </div>
+                    <div>
+                        <div class="text-secondary" style="font-size: 0.85rem; font-weight: 500;">TOTAL MATÉRIELS</div>
+                        <div class="fs-3 fw-bold" th:text="${totalMateriel}">12</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Employés -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card-stat d-flex align-items-center gap-3">
+                    <div class="stat-icon stat-icon-green">
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                    <div>
+                        <div class="text-secondary" style="font-size: 0.85rem; font-weight: 500;">TOTAL EMPLOYÉS</div>
+                        <div class="fs-3 fw-bold" th:text="${totalEmploye}">8</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Affectations -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card-stat d-flex align-items-center gap-3">
+                    <div class="stat-icon stat-icon-purple">
+                        <i class="fa-solid fa-handshake"></i>
+                    </div>
+                    <div>
+                        <div class="text-secondary" style="font-size: 0.85rem; font-weight: 500;">AFFECTATIONS</div>
+                        <div class="fs-3 fw-bold" th:text="${totalAffectation}">6</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taux d'Utilisation -->
+            <div class="col-12 col-sm-6 col-lg-3">
+                <div class="card-stat d-flex align-items-center gap-3">
+                    <div class="stat-icon stat-icon-orange">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <div class="text-secondary" style="font-size: 0.85rem; font-weight: 500;">TAUX UTILISATION</div>
+                        <div class="fs-3 fw-bold" th:text="${tauxUtilisation} + ' %'">50.0 %</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Recent Matériels -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Matériels récents</h5>
+                        <a href="/materiels" class="btn btn-sm btn-light text-primary fw-semibold" style="border-radius: 8px;">Voir tout</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr class="text-secondary" style="font-size: 0.85rem;">
+                                    <th>Réf</th>
+                                    <th>Type</th>
+                                    <th>Marque</th>
+                                    <th>Etat</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="m : ${recentMateriels}">
+                                    <td>
+                                        <a th:href="@{/materiels/view/{id}(id=${m.id})}" th:text="${m.ref}" class="fw-semibold text-decoration-none">REF-001</a>
+                                    </td>
+                                    <td th:text="${m.type}">PC</td>
+                                    <td th:text="${m.marque}">Dell</td>
+                                    <td>
+                                        <span class="badge badge-pill"
+                                              th:classappend="${m.etat.name() == 'OK' ? 'bg-success-subtle text-success' : (m.etat.name() == 'REFORME' ? 'bg-danger-subtle text-danger' : 'bg-warning-subtle text-warning')}"
+                                              th:text="${m.etat}">OK</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentMateriels)}">
+                                    <td colspan="4" class="text-center text-secondary py-3">Aucun matériel disponible</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Affectations -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold mb-0">Affectations récentes</h5>
+                        <a href="/affectations" class="btn btn-sm btn-light text-primary fw-semibold" style="border-radius: 8px;">Voir tout</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table align-middle">
+                            <thead>
+                                <tr class="text-secondary" style="font-size: 0.85rem;">
+                                    <th>Matériel</th>
+                                    <th>Employé</th>
+                                    <th>Début</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="a : ${recentAffectations}">
+                                    <td>
+                                        <a th:href="@{/materiels/view/{id}(id=${a.materiel.id})}" th:text="${a.materiel.ref}" class="fw-semibold text-decoration-none">REF-PC</a>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{/employes/view/{id}(id=${a.employe.id})}" th:text="${a.employe.nom}" class="text-decoration-none text-dark">Jean Paul</a>
+                                    </td>
+                                    <td th:text="${a.dateDebut}">2026-06-06</td>
+                                    <td>
+                                        <span class="badge badge-pill"
+                                              th:classappend="${a.statut.name() == 'ACTIVE' ? 'bg-success-subtle text-success' : (a.statut.name() == 'RETOURNEE' ? 'bg-secondary-subtle text-secondary' : 'bg-warning-subtle text-warning')}"
+                                              th:text="${a.statut}">ACTIVE</span>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentAffectations)}">
+                                    <td colspan="4" class="text-center text-secondary py-3">Aucune affectation disponible</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

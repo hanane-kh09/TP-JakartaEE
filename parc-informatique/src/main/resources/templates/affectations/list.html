@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::#affectations-list})}">
+<head>
+    <title>Affectations - Parc Informatique</title>
+</head>
+<body>
+    <div id="affectations-list">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Gestion des affectations</h1>
+                <p class="text-secondary mb-0">Attribution de matériel aux employés et historique d'utilisation</p>
+            </div>
+            <a href="/affectations/new" class="btn btn-primary btn-primary-custom">
+                <i class="fa-solid fa-plus me-2"></i>Nouvelle affectation
+            </a>
+        </div>
+
+        <!-- Filters & Search Bar -->
+        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 16px;">
+            <form method="GET" action="/affectations" class="row g-3">
+                <div class="col-12 col-md-4">
+                    <label class="form-label fw-semibold" style="font-size: 0.85rem;">Statut de l'affectation</label>
+                    <select name="statut" class="form-select">
+                        <option value="" th:text="'-- Tous les statuts --'"></option>
+                        <option th:each="s : ${statuts}" th:value="${s}" th:text="${s}"
+                                th:selected="${s == selectedStatut}"></option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-4">
+                    <label class="form-label fw-semibold" style="font-size: 0.85rem;">Service de l'employé</label>
+                    <input type="text" name="service" th:value="${selectedService}" class="form-control" placeholder="ex: Informatique, Comptabilité">
+                </div>
+                <div class="col-12 col-md-4 d-flex gap-2 align-items-end justify-content-md-end">
+                    <button type="submit" class="btn btn-light fw-semibold w-100 w-md-auto" style="border-radius: 8px; padding: 10px 20px;">Filtrer</button>
+                    <a href="/affectations" class="btn btn-link text-secondary text-decoration-none d-flex align-items-center">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Table -->
+        <div class="table-custom">
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Matériel</th>
+                            <th>Employé</th>
+                            <th>Service</th>
+                            <th>Date Début</th>
+                            <th>Date Fin</th>
+                            <th>Statut</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="a : ${affectations}">
+                            <td>
+                                <a th:href="@{/materiels/view/{id}(id=${a.materiel.id})}" th:text="${a.materiel.ref} + ' - ' + ${a.materiel.marque}" class="fw-semibold text-decoration-none">REF-PC (Dell)</a>
+                            </td>
+                            <td>
+                                <a th:href="@{/employes/view/{id}(id=${a.employe.id})}" th:text="${a.employe.nom}" class="text-decoration-none text-dark">Jean Paul</a>
+                            </td>
+                            <td th:text="${a.employe.service}">Informatique</td>
+                            <td th:text="${a.dateDebut}">2026-06-06</td>
+                            <td th:text="${a.dateFin != null ? a.dateFin : 'En cours'}">-</td>
+                            <td>
+                                <span class="badge badge-pill"
+                                      th:classappend="${a.statut.name() == 'ACTIVE' ? 'bg-success-subtle text-success' : (a.statut.name() == 'RETOURNEE' ? 'bg-secondary-subtle text-secondary' : 'bg-warning-subtle text-warning')}"
+                                      th:text="${a.statut}">ACTIVE</span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex gap-2">
+                                    <!-- Clôturer -->
+                                    <a th:href="@{/affectations/cloturer/{id}(id=${a.id})}" th:if="${a.statut.name() == 'ACTIVE'}" class="btn btn-sm btn-success text-white" title="Clôturer l'affectation" style="border-radius: 6px;">
+                                        <i class="fa-solid fa-lock"></i> Clôturer
+                                    </a>
+                                    <!-- Modifier -->
+                                    <a th:href="@{/affectations/edit/{id}(id=${a.id})}" class="btn btn-sm btn-light text-warning" title="Modifier" style="border-radius: 6px;">
+                                        <i class="fa-solid fa-pen"></i>
+                                    </a>
+                                    <!-- Supprimer -->
+                                    <button type="button" class="btn btn-sm btn-light text-danger" title="Supprimer" style="border-radius: 6px;"
+                                            data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                            th:data-url="@{/affectations/delete/{id}(id=${a.id})}"
+                                            onclick="prepareDelete(this)">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(affectations)}">
+                            <td colspan="7" class="text-center text-secondary py-5">
+                                <i class="fa-solid fa-inbox fs-1 mb-3 d-block text-muted"></i>
+                                Aucune affectation enregistrée
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow" style="border-radius: 16px;">
+                    <div class="modal-header border-0 pt-4 px-4">
+                        <h5 class="modal-title fw-bold text-danger" id="deleteModalLabel">
+                            <i class="fa-solid fa-circle-exclamation me-2"></i>Confirmer la suppression
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body px-4 py-3">
+                        <p class="mb-0 text-secondary">Êtes-vous sûr de vouloir supprimer cette affectation ? Cette action est définitive.</p>
+                    </div>
+                    <div class="modal-footer border-0 pb-4 px-4 gap-2">
+                        <button type="button" class="btn btn-light fw-semibold" data-bs-dismiss="modal" style="border-radius: 8px; padding: 10px 20px;">Annuler</button>
+                        <a href="#" id="confirmDeleteBtn" class="btn btn-danger fw-semibold" style="border-radius: 8px; padding: 10px 20px;">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Script for Delete Modal -->
+        <script>
+            function prepareDelete(button) {
+                const deleteUrl = button.getAttribute('data-url');
+                document.getElementById('confirmDeleteBtn').setAttribute('href', deleteUrl);
+            }
+        </script>
+    </div>
+</body>
+</html>

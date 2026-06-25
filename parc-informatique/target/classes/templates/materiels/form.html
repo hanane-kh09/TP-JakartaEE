@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::#materiel-form-block})}">
+<head>
+    <title th:text="${isEdit} ? 'Modifier le matériel' : 'Ajouter un matériel'"></title>
+</head>
+<body>
+    <div id="materiel-form-block">
+        <!-- Header -->
+        <div class="page-header">
+            <div>
+                <h1 class="page-title" th:text="${isEdit} ? 'Modifier le matériel' : 'Ajouter un matériel'">Ajouter un matériel</h1>
+                <p class="text-secondary mb-0" th:text="${isEdit} ? 'Mise à jour des informations de la fiche matériel' : 'Saisir les informations pour enregistrer un nouvel équipement'"></p>
+            </div>
+            <a href="/materiels" class="btn btn-light fw-semibold" style="border-radius: 8px;">
+                <i class="fa-solid fa-arrow-left me-2"></i>Retour à la liste
+            </a>
+        </div>
+
+        <!-- Form Card -->
+        <div class="form-card max-width-md mx-auto" style="max-width: 800px;">
+            <form th:action="${isEdit} ? @{/materiels/edit/{id}(id=${materiel.id})} : @{/materiels/new}"
+                  th:object="${materiel}" method="POST" class="row g-4">
+                
+                <!-- Hidden ID for Edit -->
+                <input type="hidden" th:field="*{id}" th:if="${isEdit}"/>
+
+                <!-- Reference -->
+                <div class="col-12 col-md-6">
+                    <label for="ref" class="form-label fw-semibold">Référence <span class="text-danger">*</span></label>
+                    <input type="text" id="ref" th:field="*{ref}" class="form-control" placeholder="ex: REF-PC-009"
+                           th:classappend="${#fields.hasErrors('ref')} ? 'is-invalid' : ''">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('ref')}" th:errors="*{ref}">
+                        La référence est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Type -->
+                <div class="col-12 col-md-6">
+                    <label for="type" class="form-label fw-semibold">Type de matériel <span class="text-danger">*</span></label>
+                    <select id="type" th:field="*{type}" class="form-select"
+                            th:classappend="${#fields.hasErrors('type')} ? 'is-invalid' : ''">
+                        <option value="" th:text="'-- Sélectionner le type --'"></option>
+                        <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('type')}" th:errors="*{type}">
+                        Le type est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Marque -->
+                <div class="col-12 col-md-6">
+                    <label for="marque" class="form-label fw-semibold">Marque <span class="text-danger">*</span></label>
+                    <input type="text" id="marque" th:field="*{marque}" class="form-control" placeholder="ex: Lenovo, HP, Dell"
+                           th:classappend="${#fields.hasErrors('marque')} ? 'is-invalid' : ''">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('marque')}" th:errors="*{marque}">
+                        La marque est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Etat -->
+                <div class="col-12 col-md-6">
+                    <label for="etat" class="form-label fw-semibold">État <span class="text-danger">*</span></label>
+                    <select id="etat" th:field="*{etat}" class="form-select"
+                            th:classappend="${#fields.hasErrors('etat')} ? 'is-invalid' : ''">
+                        <option value="" th:text="'-- Sélectionner l\'état --'"></option>
+                        <option th:each="e : ${etats}" th:value="${e}" th:text="${e}"></option>
+                    </select>
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('etat')}" th:errors="*{etat}">
+                        L'état est obligatoire.
+                    </div>
+                </div>
+
+                <!-- Date d'Achat -->
+                <div class="col-12 col-md-6">
+                    <label for="dateAchat" class="form-label fw-semibold">Date d'achat</label>
+                    <input type="date" id="dateAchat" th:field="*{dateAchat}" class="form-control"
+                           th:classappend="${#fields.hasErrors('dateAchat')} ? 'is-invalid' : ''">
+                    <div class="invalid-feedback" th:if="${#fields.hasErrors('dateAchat')}" th:errors="*{dateAchat}">
+                        Date invalide.
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12 d-flex gap-3 mt-5">
+                    <button type="submit" class="btn btn-primary btn-primary-custom px-4" th:text="${isEdit} ? 'Mettre à jour' : 'Enregistrer'"></button>
+                    <a href="/materiels" class="btn btn-light fw-semibold px-4" style="border-radius: 8px;">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
