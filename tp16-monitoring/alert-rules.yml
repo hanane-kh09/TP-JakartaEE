@@ -1,0 +1,18 @@
+groups:
+  - name: spring-alerts
+    rules:
+      - alert: ApplicationDown
+        expr: up{job="spring-boot-app"} == 0
+        for: 10s
+        labels:
+          severity: critical
+        annotations:
+          summary: "Application Spring Boot indisponible"
+
+      - alert: HighLatency
+        expr: rate(http_server_requests_seconds_sum[1m]) / rate(http_server_requests_seconds_count[1m]) > 2
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence élevée détectée"
